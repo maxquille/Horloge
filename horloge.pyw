@@ -34,8 +34,7 @@ class widget(qt.QWidget):
 	def __init__(self, parent=None):
 		qt.QWidget.__init__(self)#Creation de la fenetre
 		
-		self.setWindow()
-		
+
 		# Récupération de l'heure actuel
 		self.Hcurent= datetime.datetime(int(time.strftime("20%y")),int(time.strftime("%m")),int(time.strftime("%d")),int(time.strftime("%H")), int(time.strftime("%M")),  int(time.strftime("%S")))
 
@@ -65,9 +64,7 @@ class widget(qt.QWidget):
 		#Photo pilote
 		self.Pilote_phto=sys.path[0]+"\\"+"photo_pilote.jpg"
 		
-		
 		# Label text pilote
-		self.Pilote_text="M. FREINE / M. TARD"
 		self.Pilote_textColor="rgb(255, 255, 255)"
 		self.Pilote_textBackgroundColor="rgba(0,0,0,0%)"
 		self.Pilote_textFont_Police="Arial Unicode MS"
@@ -149,24 +146,24 @@ class widget(qt.QWidget):
 			self.Pilote_textY = qt.QApplication.desktop().height() * self.Pilote_textY / self.Reseize_refHeight
 			self.MainWindow_logoWidth = qt.QApplication.desktop().height() * self.MainWindow_logoWidth / self.Reseize_refHeight
 			self.MainWindow_logoHeight = qt.QApplication.desktop().height() * self.MainWindow_logoHeight / self.Reseize_refHeight
-			
+
 		# Label nom pilote
-		self.labelTextPilote= QtGui.QLabel(self.Pilote_text)
+		self.labelTextPilote= QtGui.QLabel("M. FREINE / M. TARD")
 		self.labelTextPilote.setParent(self)
-		font = QFont(self.Pilote_textFont_Police);
-		font.setPointSize(self.Pilote_textFont_PointSize);
-		font.setBold(self.Pilote_textFont_Bold);
+		font = QFont(self.Pilote_textFont_Police)
+		font.setPointSize(self.Pilote_textFont_PointSize)
+		font.setBold(self.Pilote_textFont_Bold)
 		self.labelTextPilote.setFont(font)
 		self.labelTextPilote.setStyleSheet('background-color: '+self.Pilote_textBackgroundColor+'; color: '+self.Pilote_textColor+';')
-		self.labelTextPilote.setGeometry(100, self.Pilote_textY, 1000, 100)
-		
+		self.labelTextPilote.setGeometry(self.MainWindow_backgroundYTop + 10, self.Pilote_textY, 1000, 100)
+
 		# Photo pilote
 		self.labelPhotoPilote = QtGui.QLabel(self)
 		pix = QtGui.QPixmap(self.Pilote_phto)
-		self.labelPhotoPilote.setPixmap(pix.scaled(self.MainWindow_backgroundYTop, 200,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation))
+		self.labelPhotoPilote.setPixmap(pix.scaled(self.MainWindow_backgroundYTop, self.MainWindow_backgroundYTop,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation))
 		self.labelPhotoPilote.setStyleSheet('background-color: '+self.MainWindow_logoBackgroundColor)
-		self.labelPhotoPilote.setGeometry(0, self.Pilote_textY, 1000, 100)
-		
+		self.labelPhotoPilote.setGeometry(5, self.Pilote_textY, 1000, 100)
+
 		# Label heure
 		self.labelHeureReel = QtGui.QLabel(time.strftime('%H:%M:%S',time.localtime()))
 		font = QFont(self.Hreel_police)
@@ -176,7 +173,7 @@ class widget(qt.QWidget):
 		self.labelHeureReel.setStyleSheet('background-color: '+self.Hreel_backgroundColor+'; color:'+self.Hreel_textColor+'; border-radius: '+self.Hreel_textBorderRadius+';')
 		mainLayout.addWidget(self.labelHeureReel,0,3,1,1,Qt.AlignTop|Qt.AlignRight)
 
-		# Label date
+		# Label i
 		self.labelDate = QtGui.QLabel(time.strftime('%d/%m/%y',time.localtime()))
 		font = QFont(self.Hdate_police)
 		font.setPointSize(self.Hdate_pointSize)
@@ -241,7 +238,9 @@ class widget(qt.QWidget):
 		self.timer = QtCore.QTimer(self)
 		self.timer.timeout.connect(self.updateLabel)
 		self.timer.start(1000)
-	
+		
+		self.setWindow1()
+
 	def paintEvent(self, event):
 		self.painter=QPainter(self)
 		r_topRec= qt.QDesktopWidget().screenGeometry(screen=1)
@@ -310,16 +309,38 @@ class widget(qt.QWidget):
 			self.labelDec.setStyleSheet('background-color: '+self.Hdec_backgroundColor+'; color:'+self.Hdec_textColor+'; border-radius: '+self.Hdec_textBorderRadius+';')
 			self.labelDec.setText("+"+str(self.Hcurent-self.Hout))
 	
-	def setWindow(self):
-		self.window = None  # Initialisation
-		self.window = QtGui.QWidget()
-		self.mainLayoutwindow = QtGui.QGridLayout(self.window)
+	def setWindow1(self):
+		self.window1 = None  # Initialisation
+		self.window1 = QtGui.QWidget()
+		self.window1.setGeometry(qt.QDesktopWidget().screenGeometry(screen=1).x()+100, qt.QDesktopWidget().screenGeometry(screen=1).y()+100,100,100)
+		print qt.QDesktopWidget().screenGeometry(screen=1)
+		self.window1.setWindowTitle("Reglages")
+		self.mainLayoutwindow1 = QtGui.QVBoxLayout(self.window1)
+
+		self.GroupBoxNomPilote= QtGui.QGroupBox("Nom pilote / copilote")
+		layoutInfoNom = QtGui.QVBoxLayout()
+		self.GroupBoxNomPilote.setLayout(layoutInfoNom)
+		self.mainLayoutwindow1.addWidget(self.GroupBoxNomPilote)
+
+		self.editorNom = QtGui.QLineEdit()
+		self.editorNom.setFocusPolicy(Qt.TabFocus)
+		self.editorNom.setText(self.labelTextPilote.text())
+		self.editorNom.setFixedSize(500,30)
+		layoutInfoNom.addWidget(self.editorNom)
+
 		self.button = QtGui.QPushButton("Valider")
-		self.mainLayoutwindow.addWidget(self.button)
-		self.connect(self.button, QtCore.SIGNAL("clicked()"), self.sigButton)
-	
-	def sigButton(self):
-		self.window.hide()
+		self.button.setFocusPolicy(Qt.TabFocus)
+		self.button.setAutoDefault(True)
+		self.mainLayoutwindow1.addWidget(self.button)
+		self.connect(self.button, QtCore.SIGNAL("clicked()"), self.sigWindow1ButtonOk)
+
+	def keyPressEvent(self, e):
+		if e.key() == QtCore.Qt.Key_F1:
+			self.window1.show()
+			self.editorNom.setFocus()
+
+	def sigWindow1ButtonOk(self):
+		self.window1.hide()
 		self.Hcurent= datetime.datetime(int(time.strftime("20%y")),int(time.strftime("%m")),int(time.strftime("%d")),int(time.strftime("%H")), int(time.strftime("%M")),  int(time.strftime("%S")))
 		# SET HEURE IN
 		self.Hin = self.Hcurent+datetime.timedelta(seconds=10)
@@ -327,9 +348,6 @@ class widget(qt.QWidget):
 		self.Hout = self.Hin+datetime.timedelta(hours=0,minutes=0,seconds=5) # (heure,minute,seconde)
 		self.labelHeureOut.setText(" :   " +self.Hout.strftime("%H")+":"+self.Hout.strftime("%M")+":"+self.Hout.strftime("%S"))
 		self.labelHeureIn.setText(" :   " + self.Hin.strftime("%H")+":"+ self.Hin.strftime("%M")+":"+self.Hin.strftime("%S"))
-
-	def keyPressEvent(self, e):
-		if e.key() == QtCore.Qt.Key_F1:
-			self.window.show()
+		self.labelTextPilote.setText(self.editorNom.text())
 
 main()

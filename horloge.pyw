@@ -16,9 +16,7 @@ from tkinter import *
 import time,sys,os,logging,subprocess,re,socket,threading,datetime 
 
 #Version
-VERSION="v003"
-
-
+VERSION="v004"
 
 app = qt.QApplication(sys.argv)
 
@@ -28,26 +26,24 @@ def main():
 	w.show()
 	sys.exit(app.exec_())
 	
-	
 class widget(qt.QWidget):
 	
 	def __init__(self, parent=None):
-		qt.QWidget.__init__(self)#Creation de la fenetre
+		qt.QWidget.__init__(self)
 		
-
+		self.TempsAssi_min = 15
+		
 		# Récupération de l'heure actuel
 		self.Hcurent= datetime.datetime(int(time.strftime("20%y")),int(time.strftime("%m")),int(time.strftime("%d")),int(time.strftime("%H")), int(time.strftime("%M")),  int(time.strftime("%S")))
 
 		# SET HEURE IN
-		#Hin = datetime.datetime(2015,04,14,00,21,00) # (Année,mois,jour,heure,minute,seconde)
-		self.Hin = self.Hcurent+datetime.timedelta(seconds=1)
+		self.Hin = self.Hcurent
 		# SET HEURE OUT
-		#Hout = datetime.datetime(2015,03,24,22,55,00) # (Année,mois,jour,heure,minute,seconde)
-		self.Hout = self.Hin+datetime.timedelta(hours=0,minutes=0,seconds=5) # (heure,minute,seconde)
+		self.Hout = self.Hin
 
-		## REGLAGE UTILISATEUR
 		self.Reseize_pointSize=True
 		self.Reseize_refHeight=768
+		
 		# Fenêtre principal
 		self.MainWindow_backgroundColor="background-color:rgb(0, 0, 0);"
 		self.MainWindow_backgroundColorTop=QColor(44,102,126)
@@ -110,7 +106,6 @@ class widget(qt.QWidget):
 		self.Hdec_bold=True
 		self.Hdec_pointSize=210
 		self.Hdec_textBorderRadius=""
-		## FIN REGLAGE UTILISATEUR
 
 		# Fenêtre principal
 		self.setWindowTitle(self.MainWindow_windowTitle)
@@ -173,7 +168,7 @@ class widget(qt.QWidget):
 		self.labelHeureReel.setStyleSheet('background-color: '+self.Hreel_backgroundColor+'; color:'+self.Hreel_textColor+'; border-radius: '+self.Hreel_textBorderRadius+';')
 		mainLayout.addWidget(self.labelHeureReel,0,3,1,1,Qt.AlignTop|Qt.AlignRight)
 
-		# Label i
+		# Label date
 		self.labelDate = QtGui.QLabel(time.strftime('%d/%m/%y',time.localtime()))
 		font = QFont(self.Hdate_police)
 		font.setPointSize(self.Hdate_pointSize)
@@ -294,7 +289,7 @@ class widget(qt.QWidget):
 		hour=time.strftime("%H")
 		minute=time.strftime("%M")
 		second=time.strftime("%S")
-		self.Hcurent= datetime.datetime(int(year),int(month),int(day),int(hour),int(minute), int(second))
+		self.Hcurent= datetime.datetime(int(year),int(month),int(day),int(hour),int(minute),int(second))
 		
 		self.labelHeureReel.setText(hour+":"+minute+":"+second)
 		
@@ -303,17 +298,20 @@ class widget(qt.QWidget):
 		if self.Hout>=self.Hcurent:
 			self.Hdec_textColor="rgb(0, 0, 0)"
 			self.labelDec.setStyleSheet('background-color: '+self.Hdec_backgroundColor+'; color:'+self.Hdec_textColor+'; border-radius: '+self.Hdec_textBorderRadius+';')
-			self.labelDec.setText(str(self.Hout-self.Hcurent))
-		elif self.Hcurent>self.Hout:
-			self.Hdec_textColor="rgb(181, 0, 0)"
-			self.labelDec.setStyleSheet('background-color: '+self.Hdec_backgroundColor+'; color:'+self.Hdec_textColor+'; border-radius: '+self.Hdec_textBorderRadius+';')
-			self.labelDec.setText("+"+str(self.Hcurent-self.Hout))
+			if self.Hout-self.Hcurent > datetime.timedelta(hours=0,minutes=int(self.editorTempsAssi.text()),seconds=0):
+				self.labelDec.setText(str(datetime.timedelta(hours=0,minutes=int(self.editorTempsAssi.text()),seconds=0)))
+			else:
+				self.labelDec.setText(str(self.Hout-self.Hcurent))
+
+		#elif self.Hcurent>self.Hout:
+		#	self.Hdec_textColor="rgb(181, 0, 0)"
+		#	self.labelDec.setStyleSheet('background-color: '+self.Hdec_backgroundColor+'; color:'+self.Hdec_textColor+'; border-radius: '+self.Hdec_textBorderRadius+';')
+		#	self.labelDec.setText("+"+str(self.Hcurent-self.Hout))
 	
 	def setWindow1(self):
 		self.window1 = None  # Initialisation
 		self.window1 = QtGui.QWidget()
 		self.window1.setGeometry(qt.QDesktopWidget().screenGeometry(screen=1).x()+100, qt.QDesktopWidget().screenGeometry(screen=1).y()+100,100,100)
-		print qt.QDesktopWidget().screenGeometry(screen=1)
 		self.window1.setWindowTitle("Reglages")
 		self.mainLayoutwindow1 = QtGui.QVBoxLayout(self.window1)
 
@@ -328,6 +326,46 @@ class widget(qt.QWidget):
 		self.editorNom.setFixedSize(500,30)
 		layoutInfoNom.addWidget(self.editorNom)
 
+		self.GroupBoxHin= QtGui.QGroupBox("Heure entree")
+		layoutHin = QtGui.QGridLayout()
+		self.GroupBoxHin.setLayout(layoutHin)
+		self.mainLayoutwindow1.addWidget(self.GroupBoxHin)
+		
+		self.labelTextHin = QtGui.QLabel("Heure")
+		layoutHin.addWidget(self.labelTextHin,0,0,1,1)
+
+		self.labelTextHin = QtGui.QLabel("Minute")
+		layoutHin.addWidget(self.labelTextHin,0,1,1,1)
+		
+		self.labelTextHin = QtGui.QLabel("Seconde")
+		layoutHin.addWidget(self.labelTextHin,0,2,1,1)
+
+		self.editorHin_h = QtGui.QLineEdit()
+		self.editorHin_h.setFocusPolicy(Qt.TabFocus)
+		self.editorHin_h.setText(time.strftime("%H"))
+		layoutHin.addWidget(self.editorHin_h,1,0,1,1)
+
+		self.editorHin_m = QtGui.QLineEdit()
+		self.editorHin_m.setFocusPolicy(Qt.TabFocus)
+		self.editorHin_m.setText(time.strftime("%M"))
+		layoutHin.addWidget(self.editorHin_m,1,1,1,1)
+		
+		self.editorHin_s = QtGui.QLineEdit()
+		self.editorHin_s.setFocusPolicy(Qt.TabFocus)
+		self.editorHin_s.setText("0")
+		layoutHin.addWidget(self.editorHin_s,1,2,1,1)
+
+		self.GroupBoxTempsAssi= QtGui.QGroupBox("Temps assistance (en min)")
+		layoutTempsAssi = QtGui.QGridLayout()
+		self.GroupBoxTempsAssi.setLayout(layoutTempsAssi)
+		self.mainLayoutwindow1.addWidget(self.GroupBoxTempsAssi)
+
+		self.editorTempsAssi = QtGui.QLineEdit()
+		self.editorTempsAssi.setFocusPolicy(Qt.TabFocus)
+		self.editorTempsAssi.setText(str(self.TempsAssi_min))
+		layoutTempsAssi.addWidget(self.editorTempsAssi)
+
+
 		self.button = QtGui.QPushButton("Valider")
 		self.button.setFocusPolicy(Qt.TabFocus)
 		self.button.setAutoDefault(True)
@@ -341,13 +379,17 @@ class widget(qt.QWidget):
 
 	def sigWindow1ButtonOk(self):
 		self.window1.hide()
-		self.Hcurent= datetime.datetime(int(time.strftime("20%y")),int(time.strftime("%m")),int(time.strftime("%d")),int(time.strftime("%H")), int(time.strftime("%M")),  int(time.strftime("%S")))
+		#self.Hcurent= datetime.datetime(int(time.strftime("20%y")),int(time.strftime("%m")),int(time.strftime("%d")),int(time.strftime("%H")), int(time.strftime("%M")),  int(time.strftime("%S")))
 		# SET HEURE IN
-		self.Hin = self.Hcurent+datetime.timedelta(seconds=10)
+		self.Hin = datetime.datetime(int(time.strftime("20%y")),int(time.strftime("%m")),int(time.strftime("%d")),int(self.editorHin_h.text()),int(self.editorHin_m.text()), int(self.editorHin_s.text()))
 		# SET HEURE OUT
-		self.Hout = self.Hin+datetime.timedelta(hours=0,minutes=0,seconds=5) # (heure,minute,seconde)
+		self.Hout = self.Hin+datetime.timedelta(hours=0,minutes=int(self.editorTempsAssi.text()),seconds=0) # (heure,minute,seconde)
+		
 		self.labelHeureOut.setText(" :   " +self.Hout.strftime("%H")+":"+self.Hout.strftime("%M")+":"+self.Hout.strftime("%S"))
 		self.labelHeureIn.setText(" :   " + self.Hin.strftime("%H")+":"+ self.Hin.strftime("%M")+":"+self.Hin.strftime("%S"))
 		self.labelTextPilote.setText(self.editorNom.text())
+		
+		
+
 
 main()

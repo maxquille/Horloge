@@ -104,7 +104,7 @@ class widget(qt.QWidget):
 		self.Hdec_backgroundColor="rgba(0,0,0,0%)"
 		self.Hdec_police="Arial Unicode MS"
 		self.Hdec_bold=True
-		self.Hdec_pointSize=210
+		self.Hdec_pointSize=250
 		self.Hdec_textBorderRadius=""
 
 		# Fenêtre principal
@@ -235,6 +235,7 @@ class widget(qt.QWidget):
 		self.timer.start(1000)
 		
 		self.setWindow1()
+		self.setWindow2()
 
 	def paintEvent(self, event):
 		self.painter=QPainter(self)
@@ -313,23 +314,22 @@ class widget(qt.QWidget):
 		self.window1 = QtGui.QWidget()
 		self.window1.setGeometry(qt.QDesktopWidget().screenGeometry(screen=1).x()+100, qt.QDesktopWidget().screenGeometry(screen=1).y()+100,100,100)
 		self.window1.setWindowTitle("Reglages")
-		self.mainLayoutwindow1 = QtGui.QVBoxLayout(self.window1)
+		self.mainLayoutwindow1 = QtGui.QGridLayout(self.window1)
 
 		self.GroupBoxNomPilote= QtGui.QGroupBox("Nom pilote / copilote")
 		layoutInfoNom = QtGui.QVBoxLayout()
 		self.GroupBoxNomPilote.setLayout(layoutInfoNom)
-		self.mainLayoutwindow1.addWidget(self.GroupBoxNomPilote)
+		self.mainLayoutwindow1.addWidget(self.GroupBoxNomPilote,0,0,1,2)
 
 		self.editorNom = QtGui.QLineEdit()
 		self.editorNom.setFocusPolicy(Qt.TabFocus)
-		self.editorNom.setText(self.labelTextPilote.text())
 		self.editorNom.setFixedSize(500,30)
 		layoutInfoNom.addWidget(self.editorNom)
 
 		self.GroupBoxHin= QtGui.QGroupBox("Heure entree")
 		layoutHin = QtGui.QGridLayout()
 		self.GroupBoxHin.setLayout(layoutHin)
-		self.mainLayoutwindow1.addWidget(self.GroupBoxHin)
+		self.mainLayoutwindow1.addWidget(self.GroupBoxHin,1,0,1,2)
 		
 		self.labelTextHin = QtGui.QLabel("Heure")
 		layoutHin.addWidget(self.labelTextHin,0,0,1,1)
@@ -342,41 +342,102 @@ class widget(qt.QWidget):
 
 		self.editorHin_h = QtGui.QLineEdit()
 		self.editorHin_h.setFocusPolicy(Qt.TabFocus)
-		self.editorHin_h.setText(time.strftime("%H"))
 		layoutHin.addWidget(self.editorHin_h,1,0,1,1)
 
 		self.editorHin_m = QtGui.QLineEdit()
 		self.editorHin_m.setFocusPolicy(Qt.TabFocus)
-		self.editorHin_m.setText(time.strftime("%M"))
 		layoutHin.addWidget(self.editorHin_m,1,1,1,1)
 		
 		self.editorHin_s = QtGui.QLineEdit()
 		self.editorHin_s.setFocusPolicy(Qt.TabFocus)
-		self.editorHin_s.setText("0")
 		layoutHin.addWidget(self.editorHin_s,1,2,1,1)
 
 		self.GroupBoxTempsAssi= QtGui.QGroupBox("Temps assistance (en min)")
 		layoutTempsAssi = QtGui.QGridLayout()
 		self.GroupBoxTempsAssi.setLayout(layoutTempsAssi)
-		self.mainLayoutwindow1.addWidget(self.GroupBoxTempsAssi)
+		self.mainLayoutwindow1.addWidget(self.GroupBoxTempsAssi,2,0,1,2)
 
 		self.editorTempsAssi = QtGui.QLineEdit()
 		self.editorTempsAssi.setFocusPolicy(Qt.TabFocus)
-		self.editorTempsAssi.setText(str(self.TempsAssi_min))
 		layoutTempsAssi.addWidget(self.editorTempsAssi)
 
+		self.buttonOk = QtGui.QPushButton("Valider")
+		self.buttonOk.setFocusPolicy(Qt.TabFocus)
+		self.buttonOk.setAutoDefault(True)
+		self.mainLayoutwindow1.addWidget(self.buttonOk,3,0,1,1)
+		self.connect(self.buttonOk, QtCore.SIGNAL("clicked()"), self.sigWindow1ButtonOk)
+		
+		self.buttonAnn = QtGui.QPushButton("Annuler")
+		self.buttonAnn.setFocusPolicy(Qt.TabFocus)
+		self.buttonAnn.setAutoDefault(True)
+		self.mainLayoutwindow1.addWidget(self.buttonAnn,3,1,1,1)
+		self.connect(self.buttonAnn, QtCore.SIGNAL("clicked()"), self.sigWindow1ButtonAnn)
 
-		self.button = QtGui.QPushButton("Valider")
-		self.button.setFocusPolicy(Qt.TabFocus)
-		self.button.setAutoDefault(True)
-		self.mainLayoutwindow1.addWidget(self.button)
-		self.connect(self.button, QtCore.SIGNAL("clicked()"), self.sigWindow1ButtonOk)
+	def setWindow2(self):
+		self.window2 = None  # Initialisation
+		self.window2 = QtGui.QWidget()
+		self.window2.setGeometry(qt.QDesktopWidget().screenGeometry(screen=1).x()+100, qt.QDesktopWidget().screenGeometry(screen=1).y()+100,400,100)
+		self.window2.setWindowTitle("Infos systemes")
+		
+		self.mainLayoutwindow2 = QtGui.QGridLayout(self.window2)
+		
+		self.GroupBoxReglageH= QtGui.QGroupBox("Reglage heure systeme")
+		layoutReglageH = QtGui.QGridLayout()
+		self.GroupBoxReglageH.setLayout(layoutReglageH)
+		self.mainLayoutwindow2.addWidget(self.GroupBoxReglageH,1,0,1,2)
+		
+		self.labelText = QtGui.QLabel("Heure")
+		layoutReglageH.addWidget(self.labelText,0,0,1,1)
+
+		self.labelText = QtGui.QLabel("Minute")
+		layoutReglageH.addWidget(self.labelText,0,1,1,1)
+		
+		self.labelText  = QtGui.QLabel("Seconde")
+		layoutReglageH.addWidget(self.labelText,0,2,1,1)
+
+		self.editorSetH_h = QtGui.QLineEdit()
+		self.editorSetH_h.setFocusPolicy(Qt.TabFocus)
+		layoutReglageH.addWidget(self.editorSetH_h,1,0,1,1)
+
+		self.editorSetH_m = QtGui.QLineEdit()
+		self.editorSetH_m.setFocusPolicy(Qt.TabFocus)
+		layoutReglageH.addWidget(self.editorSetH_m,1,1,1,1)
+		
+		self.editorSetH_s = QtGui.QLineEdit()
+		self.editorSetH_s.setFocusPolicy(Qt.TabFocus)
+		layoutReglageH.addWidget(self.editorSetH_s,1,2,1,1)
+
+		self.buttonOk_w2 = QtGui.QPushButton("Valider")
+		self.buttonOk_w2.setFocusPolicy(Qt.TabFocus)
+		self.buttonOk_w2.setAutoDefault(True)
+		self.mainLayoutwindow2.addWidget(self.buttonOk_w2,2,0,1,1)
+		self.connect(self.buttonOk_w2, QtCore.SIGNAL("clicked()"), self.sigWindow2ButtonOk)
+		
+		self.buttonAnn_w2 = QtGui.QPushButton("Annuler")
+		self.buttonAnn_w2.setFocusPolicy(Qt.TabFocus)
+		self.buttonAnn_w2.setAutoDefault(True)
+		self.mainLayoutwindow2.addWidget(self.buttonAnn_w2,2,1,1,1)
+		self.connect(self.buttonAnn_w2, QtCore.SIGNAL("clicked()"), self.sigWindow2ButtonAnn)
 
 	def keyPressEvent(self, e):
 		if e.key() == QtCore.Qt.Key_F1:
+			self.editorNom.setText(self.labelTextPilote.text())
+			self.editorHin_h.setText(time.strftime("%H"))
+			self.editorHin_m.setText(time.strftime("%M"))
+			self.editorHin_s.setText("0")
+			self.editorTempsAssi.setText(str(self.TempsAssi_min))
+
 			self.window1.show()
 			self.editorNom.setFocus()
-
+		
+		if e.key() == QtCore.Qt.Key_F2:
+			self.editorSetH_h.setText(time.strftime("%H"))
+			self.editorSetH_m.setText(time.strftime("%M"))
+			self.editorSetH_s.setText(time.strftime("%S"))
+		
+			self.window2.show()
+			self.editorNom.setFocus()
+		
 	def sigWindow1ButtonOk(self):
 		self.window1.hide()
 		#self.Hcurent= datetime.datetime(int(time.strftime("20%y")),int(time.strftime("%m")),int(time.strftime("%d")),int(time.strftime("%H")), int(time.strftime("%M")),  int(time.strftime("%S")))
@@ -389,7 +450,13 @@ class widget(qt.QWidget):
 		self.labelHeureIn.setText(" :   " + self.Hin.strftime("%H")+":"+ self.Hin.strftime("%M")+":"+self.Hin.strftime("%S"))
 		self.labelTextPilote.setText(self.editorNom.text())
 		
-		
+	def sigWindow1ButtonAnn(self):
+		self.window1.hide()
 
+	def sigWindow2ButtonOk(self):
+		self.window2.hide()
+		
+	def sigWindow2ButtonAnn(self):
+		self.window2.hide()
 
 main()

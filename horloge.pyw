@@ -11,7 +11,7 @@ from PyQt4.QtGui import *
 from PyQt4 import QtGui as qt
 from PyQt4 import QtCore as qtcore
 from datetime import date
-from tkinter import *
+#from tkinter import *
 
 import time,sys,os,logging,subprocess,re,socket,threading,datetime 
 
@@ -32,6 +32,7 @@ class widget(qt.QWidget):
 		qt.QWidget.__init__(self)
 		
 		self.TempsAssi_min = 15
+		self.RAZChrono = True
 		
 		# Récupération de l'heure actuel
 		self.Hcurent= datetime.datetime(int(time.strftime("20%y")),int(time.strftime("%m")),int(time.strftime("%d")),int(time.strftime("%H")), int(time.strftime("%M")),  int(time.strftime("%S")))
@@ -56,9 +57,6 @@ class widget(qt.QWidget):
 		self.MainWindow_logoBackgroundColor="rgba(0,0,0,0%)"
 		self.MainWindow_logoWidth=300
 		self.MainWindow_logoHeight=100	
-	
-		#Photo pilote
-		self.Pilote_phto=sys.path[0]+"\\"+"photo_pilote.jpg"
 		
 		# Label text pilote
 		self.Pilote_textColor="rgb(255, 255, 255)"
@@ -69,19 +67,12 @@ class widget(qt.QWidget):
 		self.Pilote_textBorderRadius=""
 		self.Pilote_textY=10
 		# Label Heure réel
-		self.Hreel_textColor="rgb(0, 0, 0)"
+		self.Hreel_textColor="rgb(255, 255, 255)"
 		self.Hreel_backgroundColor="rgba(0,0,0,0%)"
 		self.Hreel_police="arial"
 		self.Hreel_bold=True
-		self.Hreel_pointSize=30
+		self.Hreel_pointSize=60
 		self.Hreel_textBorderRadius=""
-		# Date
-		self.Hdate_textColor="rgb(0, 0, 0)"
-		self.Hdate_backgroundColor="rgba(0,0,0,0%)"
-		self.Hdate_police="arial"
-		self.Hdate_bold=True
-		self.Hdate_pointSize=20
-		self.Hdate_textBorderRadius=""
 		# Heure IN
 		self.Hin_text="Service in"
 		self.Hin_textColor="rgb(0, 0, 0)"
@@ -134,7 +125,6 @@ class widget(qt.QWidget):
 			self.MainWindow_backgroundYTop = qt.QApplication.desktop().height() * self.MainWindow_backgroundYTop / self.Reseize_refHeight
 			self.Pilote_textFont_PointSize=qt.QApplication.desktop().height() * self.Pilote_textFont_PointSize / self.Reseize_refHeight
 			self.Hreel_pointSize=qt.QApplication.desktop().height() * self.Hreel_pointSize / self.Reseize_refHeight
-			self.Hdate_pointSize=qt.QApplication.desktop().height() * self.Hdate_pointSize / self.Reseize_refHeight
 			self.Hout_pointSize = qt.QApplication.desktop().height() * self.Hout_pointSize / self.Reseize_refHeight
 			self.Hin_pointSize = qt.QApplication.desktop().height() * self.Hin_pointSize / self.Reseize_refHeight
 			self.Hdec_pointSize = qt.QApplication.desktop().height() * self.Hdec_pointSize / self.Reseize_refHeight
@@ -150,14 +140,7 @@ class widget(qt.QWidget):
 		font.setBold(self.Pilote_textFont_Bold)
 		self.labelTextPilote.setFont(font)
 		self.labelTextPilote.setStyleSheet('background-color: '+self.Pilote_textBackgroundColor+'; color: '+self.Pilote_textColor+';')
-		self.labelTextPilote.setGeometry(self.MainWindow_backgroundYTop + 10, self.Pilote_textY, 1000, 100)
-
-		# Photo pilote
-		self.labelPhotoPilote = QtGui.QLabel(self)
-		pix = QtGui.QPixmap(self.Pilote_phto)
-		self.labelPhotoPilote.setPixmap(pix.scaled(self.MainWindow_backgroundYTop, self.MainWindow_backgroundYTop,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation))
-		self.labelPhotoPilote.setStyleSheet('background-color: '+self.MainWindow_logoBackgroundColor)
-		self.labelPhotoPilote.setGeometry(5, self.Pilote_textY, 1000, 100)
+		self.labelTextPilote.setGeometry(10, self.Pilote_textY, 1000, 100)
 
 		# Label heure
 		self.labelHeureReel = QtGui.QLabel(time.strftime('%H:%M:%S',time.localtime()))
@@ -167,15 +150,6 @@ class widget(qt.QWidget):
 		self.labelHeureReel.setFont(font)
 		self.labelHeureReel.setStyleSheet('background-color: '+self.Hreel_backgroundColor+'; color:'+self.Hreel_textColor+'; border-radius: '+self.Hreel_textBorderRadius+';')
 		mainLayout.addWidget(self.labelHeureReel,0,3,1,1,Qt.AlignTop|Qt.AlignRight)
-
-		# Label date
-		self.labelDate = QtGui.QLabel(time.strftime('%d/%m/%y',time.localtime()))
-		font = QFont(self.Hdate_police)
-		font.setPointSize(self.Hdate_pointSize)
-		font.setBold(self.Hdate_bold)
-		self.labelDate.setFont(font)
-		self.labelDate.setStyleSheet('background-color: '+self.Hdate_backgroundColor+'; color:'+self.Hdate_textColor+'; border-radius: '+self.Hdate_textBorderRadius+';')
-		mainLayout.addWidget(self.labelDate,1,3,1,1,Qt.AlignTop|Qt.AlignRight)
 
 		# Label decompte
 		self.labelDec = QtGui.QLabel("0:00:00")
@@ -195,13 +169,14 @@ class widget(qt.QWidget):
 		self.labelTextHeureIn.setStyleSheet('background-color: '+self.Hin_backgroundColor+'; color:'+self.Hin_textColor+'; border-radius: '+self.Hin_textBorderRadius+';')
 		mainLayout.addWidget(self.labelTextHeureIn,13,0,Qt.AlignLeft|Qt.AlignBottom)
 		# Label heure in
-		self.labelHeureIn = QtGui.QLabel(" :   " + self.Hin.strftime("%H")+":"+ self.Hin.strftime("%M")+":"+self.Hin.strftime("%S"))
+		self.labelHeureIn = QtGui.QLabel()
 		font = QFont(self.Hin_police)
 		font.setPointSize(self.Hin_pointSize)
 		font.setBold(self.Hin_bold)
 		self.labelHeureIn.setFont(font)
 		self.labelHeureIn.setStyleSheet('background-color: '+self.Hin_backgroundColor+'; color:'+self.Hin_textColor+'; border-radius: '+self.Hin_textBorderRadius+';')
 		mainLayout.addWidget(self.labelHeureIn,13,1,Qt.AlignLeft|Qt.AlignBottom)
+		
 		# Label text heure out
 		self.labelTextHeureOut = QtGui.QLabel(self.Hout_text)
 		font = QFont(self.Hout_police)
@@ -212,7 +187,7 @@ class widget(qt.QWidget):
 		mainLayout.addWidget(self.labelTextHeureOut,14,0,Qt.AlignLeft|Qt.AlignBottom)
 
 		# Label heure out
-		self.labelHeureOut = QtGui.QLabel(" :   " +self.Hout.strftime("%H")+":"+self.Hout.strftime("%M")+":"+self.Hout.strftime("%S"))
+		self.labelHeureOut = QtGui.QLabel()
 		font = QFont(self.Hout_police)
 		font.setPointSize(self.Hout_pointSize)
 		font.setBold(self.Hout_bold)
@@ -234,6 +209,7 @@ class widget(qt.QWidget):
 		self.timer.timeout.connect(self.updateLabel)
 		self.timer.start(1000)
 		
+		self.razChrono()
 		self.setWindow1()
 		self.setWindow2()
 
@@ -295,19 +271,30 @@ class widget(qt.QWidget):
 		self.labelHeureReel.setText(hour+":"+minute+":"+second)
 		
 		# Mise à jour du compte à rebour
-		#if self.Hcurent>=self.Hin:
-		if self.Hout>=self.Hcurent:
-			self.Hdec_textColor="rgb(0, 0, 0)"
-			self.labelDec.setStyleSheet('background-color: '+self.Hdec_backgroundColor+'; color:'+self.Hdec_textColor+'; border-radius: '+self.Hdec_textBorderRadius+';')
+		if self.Hout>=self.Hcurent and not self.RAZChrono:
+			font = QFont(self.Hdec_police)
+			font.setPointSize(self.Hdec_pointSize)
+			font.setBold(self.Hdec_bold)
+			self.labelDec.setFont(font)
+			if self.Hout-self.Hcurent <=  datetime.timedelta(hours=0,minutes=3,seconds=0):
+				self.Hdec_textColor="rgb(181, 0, 0)"
+				self.labelDec.setStyleSheet('background-color: '+self.Hdec_backgroundColor+'; color:'+self.Hdec_textColor+'; border-radius: '+self.Hdec_textBorderRadius+';')
+			else:
+				self.Hdec_textColor="rgb(0, 0, 0)"
+				self.labelDec.setStyleSheet('background-color: '+self.Hdec_backgroundColor+'; color:'+self.Hdec_textColor+'; border-radius: '+self.Hdec_textBorderRadius+';')
 			if self.Hout-self.Hcurent > datetime.timedelta(hours=0,minutes=int(self.editorTempsAssi.text()),seconds=0):
 				self.labelDec.setText(str(datetime.timedelta(hours=0,minutes=int(self.editorTempsAssi.text()),seconds=0)))
 			else:
 				self.labelDec.setText(str(self.Hout-self.Hcurent))
 
-		#elif self.Hcurent>self.Hout:
-		#	self.Hdec_textColor="rgb(181, 0, 0)"
-		#	self.labelDec.setStyleSheet('background-color: '+self.Hdec_backgroundColor+'; color:'+self.Hdec_textColor+'; border-radius: '+self.Hdec_textBorderRadius+';')
-		#	self.labelDec.setText("+"+str(self.Hcurent-self.Hout))
+		elif self.Hcurent>self.Hout and not self.RAZChrono:
+			self.Hdec_textColor="rgb(181, 0, 0)"
+			self.labelDec.setStyleSheet('background-color: '+self.Hdec_backgroundColor+'; color:'+self.Hdec_textColor+'; border-radius: '+self.Hdec_textBorderRadius+';')
+			font = QFont(self.Hdec_police)
+			font.setPointSize(self.Hdec_pointSize-30)
+			font.setBold(self.Hdec_bold)
+			self.labelDec.setFont(font)
+			self.labelDec.setText("+"+str(self.Hcurent-self.Hout))
 	
 	def setWindow1(self):
 		self.window1 = None  # Initialisation
@@ -360,17 +347,23 @@ class widget(qt.QWidget):
 		self.editorTempsAssi = QtGui.QLineEdit()
 		self.editorTempsAssi.setFocusPolicy(Qt.TabFocus)
 		layoutTempsAssi.addWidget(self.editorTempsAssi)
+		
+		self.buttonRAZ = QtGui.QPushButton("RAZ Chrono")
+		self.buttonRAZ.setFocusPolicy(Qt.TabFocus)
+		self.buttonRAZ.setAutoDefault(True)
+		self.mainLayoutwindow1.addWidget(self.buttonRAZ,3,0,1,1)
+		self.connect(self.buttonRAZ, QtCore.SIGNAL("clicked()"), self.sigWindow1ButtonRAZ)
 
 		self.buttonOk = QtGui.QPushButton("Valider")
 		self.buttonOk.setFocusPolicy(Qt.TabFocus)
 		self.buttonOk.setAutoDefault(True)
-		self.mainLayoutwindow1.addWidget(self.buttonOk,3,0,1,1)
+		self.mainLayoutwindow1.addWidget(self.buttonOk,4,0,1,1)
 		self.connect(self.buttonOk, QtCore.SIGNAL("clicked()"), self.sigWindow1ButtonOk)
 		
 		self.buttonAnn = QtGui.QPushButton("Annuler")
 		self.buttonAnn.setFocusPolicy(Qt.TabFocus)
 		self.buttonAnn.setAutoDefault(True)
-		self.mainLayoutwindow1.addWidget(self.buttonAnn,3,1,1,1)
+		self.mainLayoutwindow1.addWidget(self.buttonAnn,4,1,1,1)
 		self.connect(self.buttonAnn, QtCore.SIGNAL("clicked()"), self.sigWindow1ButtonAnn)
 
 	def setWindow2(self):
@@ -449,8 +442,13 @@ class widget(qt.QWidget):
 		self.labelHeureOut.setText(" :   " +self.Hout.strftime("%H")+":"+self.Hout.strftime("%M")+":"+self.Hout.strftime("%S"))
 		self.labelHeureIn.setText(" :   " + self.Hin.strftime("%H")+":"+ self.Hin.strftime("%M")+":"+self.Hin.strftime("%S"))
 		self.labelTextPilote.setText(self.editorNom.text())
+		self.RAZChrono = False
 		
 	def sigWindow1ButtonAnn(self):
+		self.window1.hide()
+	
+	def sigWindow1ButtonRAZ(self):
+		self.razChrono()
 		self.window1.hide()
 
 	def sigWindow2ButtonOk(self):
@@ -459,4 +457,16 @@ class widget(qt.QWidget):
 	def sigWindow2ButtonAnn(self):
 		self.window2.hide()
 
+	def razChrono(self):
+		self.RAZChrono = True
+		font = QFont(self.Hdec_police)
+		font.setPointSize(self.Hdec_pointSize)
+		font.setBold(self.Hdec_bold)
+		self.labelDec.setFont(font)
+		self.Hdec_textColor="rgb(0, 0, 0)"
+		self.labelDec.setStyleSheet('background-color: '+self.Hdec_backgroundColor+'; color:'+self.Hdec_textColor+'; border-radius: '+self.Hdec_textBorderRadius+';')
+		self.labelHeureOut.setText(" :   00:00:00")
+		self.labelHeureIn.setText(" :   00:00:00")
+		self.labelDec.setText("0:00:00")
+		
 main()

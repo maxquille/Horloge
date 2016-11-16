@@ -53,7 +53,7 @@ class widget(qt.QWidget):
 		self.MainWindow_windowTitle="Horloge"
 		self.MainWindow_lineSup=QPen(QColor(228,115,33),30)
 		self.MainWindow_lineInf=QPen(QColor(83,84,89),30)
-		self.MainWindow_logoPath=sys.path[0]+"\\"+"logo.png"
+		self.MainWindow_logoPath=os.path.join(sys.path[0],"logo.png")
 		self.MainWindow_logoBackgroundColor="rgba(0,0,0,0%)"
 		self.MainWindow_logoWidth=300
 		self.MainWindow_logoHeight=100	

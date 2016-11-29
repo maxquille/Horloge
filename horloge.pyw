@@ -23,7 +23,7 @@ app = qt.QApplication(sys.argv)
 
 def main():
 	w = widget()
-	w.show()
+	w.showFullScreen()
 	sys.exit(app.exec_())
 	
 class widget(qt.QWidget):
@@ -61,7 +61,7 @@ class widget(qt.QWidget):
 		# Label text pilote
 		self.Pilote_textColor="rgb(255, 255, 255)"
 		self.Pilote_textBackgroundColor="rgba(0,0,0,0%)"
-		self.Pilote_textFont_Police="Arial Unicode MS"
+		self.Pilote_textFont_Police="Droid Sans"
 		self.Pilote_textFont_PointSize=40
 		self.Pilote_textFont_Bold=True
 		self.Pilote_textBorderRadius=""
@@ -69,7 +69,7 @@ class widget(qt.QWidget):
 		# Label Heure réel
 		self.Hreel_textColor="rgb(255, 255, 255)"
 		self.Hreel_backgroundColor="rgba(0,0,0,0%)"
-		self.Hreel_police="arial"
+		self.Hreel_police="DejaVu Serif Condensed"
 		self.Hreel_bold=True
 		self.Hreel_pointSize=60
 		self.Hreel_textBorderRadius=""
@@ -77,7 +77,7 @@ class widget(qt.QWidget):
 		self.Hin_text="Service in"
 		self.Hin_textColor="rgb(0, 0, 0)"
 		self.Hin_backgroundColor="rgba(0,0,0,0%)"
-		self.Hin_police="Arial Unicode MS"
+		self.Hin_police="DejaVu Serif Condensed"
 		self.Hin_bold=True
 		self.Hin_pointSize=45
 		self.Hin_textBorderRadius=""
@@ -85,7 +85,7 @@ class widget(qt.QWidget):
 		self.Hout_text="Service out"
 		self.Hout_textColor="rgb(0, 0, 0)"
 		self.Hout_backgroundColor="rgba(0,0,0,0%)"
-		self.Hout_police="Arial Unicode MS"
+		self.Hout_police="DejaVu Serif Condensed"
 		self.Hout_bold=True
 		self.Hout_pointSize=45
 		self.Hout_textBorderRadius=""
@@ -93,9 +93,10 @@ class widget(qt.QWidget):
 		# Heure Decompte
 		self.Hdec_textColor="rgb(0, 0, 0)"
 		self.Hdec_backgroundColor="rgba(0,0,0,0%)"
-		self.Hdec_police="Arial Unicode MS"
+		self.Hdec_police="Droid Sans"
+		#self.Hdec_police="DejaVu Serif Condensed"
 		self.Hdec_bold=True
-		self.Hdec_pointSize=250
+		self.Hdec_pointSize=280
 		self.Hdec_textBorderRadius=""
 
 		# Fenêtre principal
@@ -105,7 +106,7 @@ class widget(qt.QWidget):
 		self.setStyleSheet(self.MainWindow_backgroundColor)
 
 		# Event painter
-		rec = qt.QDesktopWidget().screenGeometry(screen=1)
+		rec = qt.QDesktopWidget().screenGeometry(screen=0)
 		x=rec.x()
 		y=rec.y()
 		width=rec.width()
@@ -200,7 +201,7 @@ class widget(qt.QWidget):
 		pix = QtGui.QPixmap(self.MainWindow_logoPath)
 		self.labelLogo.setPixmap(pix.scaled(self.MainWindow_logoWidth, self.MainWindow_logoHeight,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation))
 		self.labelLogo.setStyleSheet('background-color: '+self.MainWindow_logoBackgroundColor)
-		mainLayout.addWidget(self.labelLogo,14,3,Qt.AlignRight|Qt.AlignBottom)
+		mainLayout.addWidget(self.labelLogo,14,3,1,1,Qt.AlignRight|Qt.AlignBottom)
 
 		# Set de la fenêtre principal
 		self.setLayout(mainLayout)
@@ -215,7 +216,7 @@ class widget(qt.QWidget):
 
 	def paintEvent(self, event):
 		self.painter=QPainter(self)
-		r_topRec= qt.QDesktopWidget().screenGeometry(screen=1)
+		r_topRec= qt.QDesktopWidget().screenGeometry(screen=0)
 		x=r_topRec.x()
 		y=r_topRec.y()
 		width=r_topRec.width()
@@ -226,7 +227,7 @@ class widget(qt.QWidget):
 		r_topRec.setWidth(width)
 		r_topRec.setHeight(self.MainWindow_backgroundYTop)
 
-		r_bottomRec= qt.QDesktopWidget().screenGeometry(screen=1)
+		r_bottomRec= qt.QDesktopWidget().screenGeometry(screen=0)
 		x=r_bottomRec.x()
 		y=r_bottomRec.y()
 		width=r_bottomRec.width()
@@ -236,7 +237,7 @@ class widget(qt.QWidget):
 		r_bottomRec.setHeight(height)
 		r_bottomRec.setWidth(width)
 		r_bottomRec.setY(self.MainWindow_backgroundYTop+3)
-		r_bottomRec.setHeight(qt.QDesktopWidget().screenGeometry(screen=1).height()-r_topRec.height()-2)
+		r_bottomRec.setHeight(qt.QDesktopWidget().screenGeometry(screen=0).height()-r_topRec.height()-2)
 
 		self.painter.fillRect(r_topRec,self.MainWindow_backgroundColorTop)
 		self.painter.fillRect(r_bottomRec,self.MainWindow_backgroundColorBottom)

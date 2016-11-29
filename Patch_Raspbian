@@ -1,0 +1,49 @@
+Ajout de VCN
+
+Changement mot de passe pi => root
+
+Ajout module RTC ds3231
+	******************************************************************
+	https://trick77.com/adding-ds3231-real-time-clock-raspberry-pi-3/
+	
+	Add the following line at the end of /boot/config.txt in Raspbian Jessy:
+	
+	dtoverlay=i2c-rtc,ds3231
+	
+	We don’t need fake-hwclock anymore:
+	
+	apt-get purge fake-hwclock
+	
+	Check/set the current system time and write the system time to the RTC module using:
+	
+	hwclock -w
+	
+	Set the correct time zone using:
+	
+	dpkg-reconfigure tzdata
+	
+	Edit /etc/rc.local and add the hwclock command above the line that says “exit 0”:
+	
+	/sbin/hwclock -s
+	
+	
+	
+	******************************************************************
+	https://www.raspberrypi.org/forums/viewtopic.php?t=85683
+	Enable the Kernel modules:-
+	
+	Code: Select all
+	    sudo nano /etc/modules
+	
+	
+	Add the following:-
+	
+	Code: Select all
+	    i2c-bcm2708
+    		i2c-dev
+
+*************************
+Ajout demarrage en auto de l'appli python horloge
+	https://www.raspberrypi.org/forums/viewtopic.php?f=65&t=54517&p=415152&hilit=python%2bdemarrage#p415152
+	
+	Ajout du fichier /home/pi/.config/autostart/horloge.desktop

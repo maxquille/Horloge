@@ -45,6 +45,8 @@ class widget(qt.QWidget):
 		self.Reseize_pointSize=True
 		self.Reseize_refHeight=768
 		
+		self.PoliceFont = "Droid Sans"
+
 		# Fenêtre principal
 		self.MainWindow_backgroundColor="background-color:rgb(0, 0, 0);"
 		self.MainWindow_backgroundColorTop=QColor(44,102,126)
@@ -61,7 +63,7 @@ class widget(qt.QWidget):
 		# Label text pilote
 		self.Pilote_textColor="rgb(255, 255, 255)"
 		self.Pilote_textBackgroundColor="rgba(0,0,0,0%)"
-		self.Pilote_textFont_Police="Droid Sans"
+		self.Pilote_textFont_Police=self.PoliceFont
 		self.Pilote_textFont_PointSize=40
 		self.Pilote_textFont_Bold=True
 		self.Pilote_textBorderRadius=""
@@ -69,7 +71,7 @@ class widget(qt.QWidget):
 		# Label Heure réel
 		self.Hreel_textColor="rgb(255, 255, 255)"
 		self.Hreel_backgroundColor="rgba(0,0,0,0%)"
-		self.Hreel_police="DejaVu Serif Condensed"
+		self.Hreel_police=self.PoliceFont
 		self.Hreel_bold=True
 		self.Hreel_pointSize=60
 		self.Hreel_textBorderRadius=""
@@ -77,7 +79,7 @@ class widget(qt.QWidget):
 		self.Hin_text="Service in"
 		self.Hin_textColor="rgb(0, 0, 0)"
 		self.Hin_backgroundColor="rgba(0,0,0,0%)"
-		self.Hin_police="DejaVu Serif Condensed"
+		self.Hin_police=self.PoliceFont
 		self.Hin_bold=True
 		self.Hin_pointSize=45
 		self.Hin_textBorderRadius=""
@@ -85,7 +87,7 @@ class widget(qt.QWidget):
 		self.Hout_text="Service out"
 		self.Hout_textColor="rgb(0, 0, 0)"
 		self.Hout_backgroundColor="rgba(0,0,0,0%)"
-		self.Hout_police="DejaVu Serif Condensed"
+		self.Hout_police=self.PoliceFont
 		self.Hout_bold=True
 		self.Hout_pointSize=45
 		self.Hout_textBorderRadius=""
@@ -93,8 +95,7 @@ class widget(qt.QWidget):
 		# Heure Decompte
 		self.Hdec_textColor="rgb(0, 0, 0)"
 		self.Hdec_backgroundColor="rgba(0,0,0,0%)"
-		self.Hdec_police="Droid Sans"
-		#self.Hdec_police="DejaVu Serif Condensed"
+		self.Hdec_police=self.PoliceFont
 		self.Hdec_bold=True
 		self.Hdec_pointSize=280
 		self.Hdec_textBorderRadius=""

@@ -11,26 +11,30 @@ from PyQt4.QtGui import *
 from PyQt4 import QtGui as qt
 from PyQt4 import QtCore as qtcore
 from datetime import date
-#from tkinter import *
-
 import time,sys,os,logging,subprocess,re,socket,threading,datetime 
 
-#Version
+#Reglage
 VERSION="v004"
+
+
+
 
 app = qt.QApplication(sys.argv)
 
-
 def main():
+	
 	w = widget()
 	w.showFullScreen()
 	sys.exit(app.exec_())
 	
 class widget(qt.QWidget):
-	
 	def __init__(self, parent=None):
 		qt.QWidget.__init__(self)
+		self.init_window1()
 		
+
+class window1(widget):
+		# Temps par defaut assistance
 		self.TempsAssi_min = 15
 		self.RAZChrono = True
 		
@@ -42,9 +46,11 @@ class widget(qt.QWidget):
 		# SET HEURE OUT
 		self.Hout = self.Hin
 
+		# Ajustement en fonction de la taille
 		self.Reseize_pointSize=True
 		self.Reseize_refHeight=768
 		
+		# Police d'ecriture
 		self.PoliceFont = "Droid Sans"
 
 		# Fenêtre principal
@@ -59,7 +65,6 @@ class widget(qt.QWidget):
 		self.MainWindow_logoBackgroundColor="rgba(0,0,0,0%)"
 		self.MainWindow_logoWidth=300
 		self.MainWindow_logoHeight=100	
-		
 		# Label text pilote
 		self.Pilote_textColor="rgb(255, 255, 255)"
 		self.Pilote_textBackgroundColor="rgba(0,0,0,0%)"
@@ -135,7 +140,7 @@ class widget(qt.QWidget):
 			self.MainWindow_logoHeight = qt.QApplication.desktop().height() * self.MainWindow_logoHeight / self.Reseize_refHeight
 
 		# Label nom pilote
-		self.labelTextPilote= QtGui.QLabel("M. FREINE / M. TARD")
+		self.labelTextPilote= QtGui.QLabel("M. PILOTE / M. COPILOTE")
 		self.labelTextPilote.setParent(self)
 		font = QFont(self.Pilote_textFont_Police)
 		font.setPointSize(self.Pilote_textFont_PointSize)
@@ -470,5 +475,7 @@ class widget(qt.QWidget):
 		self.labelHeureOut.setText(" :   00:00:00")
 		self.labelHeureIn.setText(" :   00:00:00")
 		self.labelDec.setText("0:00:00")
+		
+
 		
 main()

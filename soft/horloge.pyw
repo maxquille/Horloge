@@ -75,6 +75,7 @@ class window(QWidget):
 
 		try:
 			fconfig.write(open(os.path.join(sys.path[0],path_fileParam),'w'))
+			subprocess.check_output(["sync"])
 		except:
 			False
 

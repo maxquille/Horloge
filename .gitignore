@@ -1,4 +1,5 @@
 /old
-cmd_git.txt
 setupPython_imageDeBase/*
 img/*
+soft/*.pyw~
+soft/*.swp

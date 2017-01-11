@@ -1,6 +1,6 @@
 #! /bin/bash
 # 	File name 	: 	patch-me.sh
-#	Release		: 	CHL_v1.0
+#	Release		: 	CHL_v1.1
 #	Date		: 	
 #	Author		: 	M. QUILLE
 #	Description	: 	-
@@ -35,7 +35,7 @@ mv /home/pi/Horloge/patch_horloge_current.tar.gz /home/pi/Horloge/backup/patch_h
 cp ./patch_horloge.tar.gz /home/pi/Horloge/patch_horloge_current.tar.gz
 
 # Mise à jour de la version GLOBAL projet
-echo "CHL_v1.0" > /version_global_projet.txt
+echo "CHL_v1.1" > /version_global_projet.txt
 
 # Sync
 sync

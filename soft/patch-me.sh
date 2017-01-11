@@ -10,7 +10,7 @@
 #		* horloge.pyw 			: 1.0.0
 #		* confAppli.ini 		: CHL_v0.1.0.0
 #		* logo.png				: CHL_v0.1.0.0
-#		* distrib_version.txt	: 1.0.0
+#		* distrib_version.txt	: raspberry_HorlogeImgBase_1.0.0.img
 
 cd /tmp/
 
@@ -26,13 +26,16 @@ cp ./confAppli.ini /home/pi/Horloge/soft
 cp ./logo.png /home/pi/Horloge/soft
 
 # Mise à jour de l'OS
-cp ./distrib_version.txt /
+
 
 # Archivage de l'ancienne archive
 mv /home/pi/Horloge/patch_horloge_current.tar.gz /home/pi/Horloge/backup/patch_horloge_backup.tar.gz
 
 # Copie de l'archive
 cp ./patch_horloge.tar.gz /home/pi/Horloge/patch_horloge_current.tar.gz
+
+# Mise à jour de la version GLOBAL projet
+echo "CHL_v1.0-beta" > /version_global_projet.txt
 
 # Sync
 sync

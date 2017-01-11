@@ -690,16 +690,20 @@ class window1(window):
 
 		addrMacEth0 = os.popen("ifconfig eth0 | grep -o -E '([[:xdigit:]]{1,2}:){5}[[:xdigit:]]{1,2}'").read()
 		distribVersion = os.popen("cat /distrib_version.txt").read().strip()
+		versionGlobalProjet = os.popen("cat /version_global_projet.txt").read().strip()
 		try :
-			textVersion = 	"Version script    : "+SCRIPT_VERSION+"\n"+\
-							"Version conf      : "+self.version_Config+"\n"+\
-							"Version logo      : "+self.version_Logo+"\n"+\
-							"Version OS        : "+distribVersion+"\n"+\
-							"HWaddr             : "+addrMacEth0
+			textVersion = 	"Version Global PROJET : "+versionGlobalProjet+"\n\n"+\
+							"Version script : "+SCRIPT_VERSION+"\n"+\
+							"Version conf    : "+self.version_Config+"\n"+\
+							"Version logo    : "+self.version_Logo+"\n"+\
+							"Version OS      : "+distribVersion+"\n"+\
+							"HWaddr          : "+addrMacEth0
 		except:
-			textVersion = 	"Version script    : "+SCRIPT_VERSION+"\n"+\
-							"Version OS        : "+distribVersion+"\n"+\
-							"HWaddr             : "+addrMacEth0
+			textVersion = 	"Version Global PROJET : "+versionGlobalProjet+"\n\n"+\
+							"Version script : "+SCRIPT_VERSION+"\n"+\
+							"Version logo    : "+self.version_Logo+"\n"+\
+							"Version OS      : "+distribVersion+"\n"+\
+							"HWaddr          : "+addrMacEth0
 
 		self.mainLayoutPopup3.addWidget(QtGui.QLabel(textVersion),0,0,1,2,Qt.AlignTop)
 		
@@ -720,7 +724,7 @@ class window1(window):
 		self.GroupBoxBasculCouleur.setLayout(layoutBasculCouleur)
 		self.mainLayoutPopup4.addWidget(self.GroupBoxBasculCouleur,0,0,1,2)
 		
-		layoutBasculCouleur.addWidget(QtGui.QLabel("La valeur 'Basculement 2' doit etre < 'Basculement 1'"),0,0,1,2)
+		layoutBasculCouleur.addWidget(QtGui.QLabel("* 'Basculement 1 : changement couleur noir vers orange\n* 'Basculement 2 : changement couleur orange vers rouge\n* La valeur 'Basculement 2' doit etre <= 'Basculement 1'"),0,0,1,2)
 		layoutBasculCouleur.addWidget(QtGui.QLabel("Basculement 1 (min)"),1,0,1,1)
 		layoutBasculCouleur.addWidget(QtGui.QLabel("Basculement 2 (min)"),1,1,1,1)
 		self.editorBascul1 = QtGui.QLineEdit()

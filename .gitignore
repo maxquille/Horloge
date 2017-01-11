@@ -1,6 +1,4 @@
 /old
 cmd_git.txt
-.horloge.pyw.swp
-horloge.pyw~
-.horloge1.pyw.swp
-setupPython_imageDeBase/
+setupPython_imageDeBase/*
+img/*

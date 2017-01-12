@@ -1,8 +1,15 @@
-
 Date construction image : 11/01/16
 image de base : 2017-01-11-raspbian-jessie.img
 + apt-get update
 + apt-get upgrade
+
+
+
+
+ip static : 10.0.0.160
+masque : 255.255.0.0
+
+
 
 
 *************************

@@ -1,6 +1,6 @@
 #! /bin/bash
 # 	File name 	: 	patch-me.sh
-#	Release		: 	CHL_v1.1
+#	Release		: 	CHL_v1.2
 #	Date		: 	
 #	Author		: 	M. QUILLE
 #	Description	: 	-
@@ -10,7 +10,7 @@
 #		* horloge.pyw 			: 1.0.0
 #		* confAppli.ini 		: CHL_v0.1.0.0
 #		* logo.png				: CHL_v0.1.0.0
-#		* distrib_version.txt	: raspberry_HorlogeImgBase_1.0.0.img
+#		* raspberry_HorlogeImgBase.img	: raspberry_HorlogeImgBase_1.0.0.img
 
 cd /tmp/
 
@@ -35,7 +35,7 @@ mv /home/pi/Horloge/patch_horloge_current.tar.gz /home/pi/Horloge/backup/patch_h
 cp ./patch_horloge.tar.gz /home/pi/Horloge/patch_horloge_current.tar.gz
 
 # Mise à jour de la version GLOBAL projet
-echo "CHL_v1.1" > /version_global_projet.txt
+echo "CHL_v1.2" > /version_global_projet.txt
 
 # Sync
 sync

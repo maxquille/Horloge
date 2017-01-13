@@ -19,12 +19,15 @@ import ConfigParser
 import sys
 
 #Reglage
-SCRIPT_VERSION="1.0.0"
+SCRIPT_VERSION="1.0.1"
 path_fileParam = "paramAppli.ini"
 path_fileConf = "confAppli.ini"
 logo_name = "logo.png"
 pictureDriver_name = "photo_pilote.png"
 archive_name = "patch_horloge.tar.gz"
+
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 class window(QWidget):
 	def __init__(self, parent=None):
@@ -74,8 +77,9 @@ class window(QWidget):
 		fconfig.set('Decompte','basculement2_min',self.decompteBasculement2_min)
 
 		try:
-			fconfig.write(open(os.path.join(sys.path[0],path_fileParam),'w'))
+			fconfig.write(open(os.path.join(str(sys.path[0]),str(path_fileParam)),'w'))
 			subprocess.check_output(["sync"])
+		
 		except:
 			False
 
@@ -85,8 +89,9 @@ class window(QWidget):
 			fconfig.read(os.path.join(sys.path[0],path_fileParam))
 			self.TextPilote = fconfig.get('General','nom_pilote_copilote')
 		except:
-			self.TextPilote = "M. NomPilote / M. NomCopilote"
-		
+			self.TextPilote = "M. NomPilote / M. NomCopilote"	
+			#sys.exit(app.exec_())
+
 		try:
 			self.TempsAssi_min = fconfig.getint('General','duree_assistance_min')
 		except:
@@ -270,7 +275,7 @@ class window(QWidget):
 		
 
 		# Label nom pilote
-		self.labelTextPilote= QtGui.QLabel(self.TextPilote)
+		self.labelTextPilote= QtGui.QLabel(unicode(self.TextPilote))
 		self.labelTextPilote.setParent(self)
 		font = QFont(self.Pilote_textFont_Police)
 		font.setPointSize(self.Pilote_textFont_PointSize)
@@ -906,7 +911,7 @@ class window1(window):
 
 	def keyPressEventOverload(self,e):
 		if e.key() == QtCore.Qt.Key_F1:
-			self.editorNom.setText(self.TextPilote)
+			self.editorNom.setText(unicode(self.TextPilote))
 			self.editorHin_day.setText(time.strftime("%d"))
 			self.editorHin_month.setText(time.strftime("%m"))
 			self.editorHin_h.setText(time.strftime("%H"))
@@ -961,12 +966,10 @@ class thradMaint(qtcore.QThread, QWidget):
 	def run(self):
 		while True:
 			time.sleep(5)
-			
-			
 			res = self.USBKeyPresent()
 			if res != None:
 				print "\nCle USB detecte"
-				time.sleep(5)
+				time.sleep(3)
 				self.copyDriverPicture(res)
 				self.executePatch(res)
 				
@@ -1024,6 +1027,7 @@ class thradMaint(qtcore.QThread, QWidget):
 		print "\nDebut fonction copyDriverPicture()"
 		try:
 			subprocess.check_output(["cp",os.path.join(path,pictureDriver_name),os.path.join(sys.path[0],pictureDriver_name)])
+			subprocess.check_output(["sync"])
 			self.rebootRequest = True
 			print "Fin fonction copyDriverPicture()"
 		except:

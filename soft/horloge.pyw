@@ -707,7 +707,6 @@ class window1(window):
 		except:
 			textVersion = 	"Version Global PROJET : "+versionGlobalProjet+"\n\n"+\
 							"Version script : "+SCRIPT_VERSION+"\n"+\
-							"Version logo    : "+self.version_Logo+"\n"+\
 							"Version OS      : "+distribVersion+"\n"+\
 							"HWaddr          : "+addrMacEth0
 

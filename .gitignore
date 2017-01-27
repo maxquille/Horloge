@@ -1,5 +1,7 @@
-/old
 setupPython_imageDeBase/*
 soft/*.pyw~
 soft/*.swp
 img/*
+soft/paramAppli.ini
+docs/*
+soft/build/*

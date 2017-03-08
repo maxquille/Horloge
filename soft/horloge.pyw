@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 #-*- coding:latin-1 -*- 
+# M.QUILLE
+
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtGui import (QApplication, QMainWindow, QGraphicsItem,QGraphicsScene, QGraphicsView, QPen, QStyle)
 from PyQt4.QtCore import QObject, pyqtSignal, SLOT, Qt, QCoreApplication
@@ -1057,7 +1059,6 @@ class thradMaint(qtcore.QThread, QWidget):
 		layoutUpdateFw= QtGui.QVBoxLayout()
 		self.GroupBoxUpdateFw.setLayout(layoutUpdateFw)
 		self.mainlayoutPopupUpdate.addWidget(self.GroupBoxUpdateFw,1,0,30,2,Qt.AlignTop)
-
 
 		self.LabelTextUpdate = QLabel()
 		layoutUpdateFw.addWidget(self.LabelTextUpdate)

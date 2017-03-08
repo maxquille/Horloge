@@ -7,7 +7,7 @@ from collections import defaultdict
 from threading import Thread
 from PyQt4.QtCore import QThread
 from threading import BoundedSemaphore, Lock, Thread
-from PyQt4.QtCore import * 
+#from PyQt4.QtCore import * 
 from PyQt4.QtGui import * 
 from PyQt4 import QtGui as qt
 from PyQt4 import QtCore as qtcore
@@ -949,9 +949,65 @@ class window1(window):
 class window2(window):
 	def __init__(self, parent=None):
 		super(window2, self).__init__(parent)
-		self.readFileParam()
-		self.readFileConf()
-		self.templateWindow()
+
+class windoCoherence(QWidget):
+	def __init__(self, parent=None):
+		QWidget.__init__(self)
+		self.info1 = 0
+		self.info2 = 0
+		self.info3 = 0
+		self.tot = 0
+
+	def check(self):
+		self.infoRetrieve()
+		if self.info1 != -1 and self.info2 != -1 and self.info3 != -1:
+			self.tot = self.info1 + self.info2
+			self.tot += 175
+			self.tot = int(oct(self.tot))
+			self.tot = str(self.tot)
+			if self.tot == self.info3:
+				return True
+			else:
+				return False
+
+		return False
+	
+	def infoRetrieve(self):
+		""" info1 """
+		self.info1 = os.popen("ifconfig eth0 | grep -o -E '([[:xdigit:]]{1,2}:){5}[[:xdigit:]]{1,2}'").read().strip().split(":")
+		
+		if len(self.info1) != 6:
+			self.info1 = -1
+		else :
+			self.info1 = int(self.info1[3],16) + int(self.info1[4],16) + int(self.info1[5],16)
+		
+		""" info2 """
+		self.info2 = os.popen("cat /proc/cpuinfo | grep Serial | sed  s/.*\ //g").read().strip()
+		if len(self.info2)>=5:
+			self.info2 = self.info2[len(self.info2)-5:len(self.info2)]
+			self.info2 = int(self.info2,16)
+		else:
+			self.info2 = -1
+		
+		""" info3 """
+		self.info3 =  os.popen("cat /hash").read().strip()
+		if self.info3 == "":
+			self.info3 = -1
+			
+	def showErr(self):
+		self.setGeometry(qt.QDesktopWidget().screenGeometry(screen=1))
+		self.setWindowFlags(Qt.FramelessWindowHint)
+		self.mainLayoutWindowError = QtGui.QGridLayout(self)
+		self.labelUserError = QtGui.QLabel(unicode("ERR 175\n\n1/"+str(self.info1)+"\n2/"+str(self.info2)+"\n3/"+str(self.tot)+"\n\nh/"+str(self.info3)))
+		font = QFont("Droid Sans")
+		font.setPointSize(30)
+		font.setBold(True)
+		self.labelUserError.setFont(font)
+
+		self.labelUserError.setStyleSheet('background-color: rgba(0,0,0,0%); color:rgb(181, 0, 0); border-radius: 0px;')
+		self.mainLayoutWindowError.addWidget(self.labelUserError,0,0,1,1)
+		self.show()
+
 
 def signal(e):
 	if e.key() == QtCore.Qt.Key_F9:
@@ -1046,13 +1102,16 @@ if __name__ == '__main__':
 	app = QtGui.QApplication(sys.argv)
 
 	subprocess.check_output(["setxkbmap","fr"])
+	
+	checkCo = windoCoherence()
 
-	w1 = window1()
-	QObject.connect(w1,w1.sig, signal)
+	if checkCo.check() == True:
+		w1 = window1()
+		QObject.connect(w1,w1.sig, signal)
 
-	#w2 = window2()
-	#QObject.connect(w2,w2.sig, signal)
-		
+	else:
+		checkCo.showErr()
+
 	t1 = thradMaint() 
 	t1.start()
 

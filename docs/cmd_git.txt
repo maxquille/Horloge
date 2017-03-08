@@ -2,3 +2,38 @@ git commit -m ""
 git show
 git pull 
 git add
+
+************************
+Si vous avez fait une faute d’orthographe dans votre dernier message de commit  :
+git commit --amend
+************************
+Annuler le dernier commit (soft)
+git reset HEAD^
+************************
+Annuler les modifications d’un fichier avant un commit
+Si vous avez modifié plusieurs fichiers mais que vous n’avez pas encore envoyé le commit et que vous voulez restaurer un fichier tel qu’il était au dernier commit, utilisez
+git checkout
+git checkout nomfichier
+************************
+Pour éviter d’avoir à faire un commit au milieu d’un travail en cours, tapez :
+
+git stash
+
+Vos fichiers modifiés seront sauvegardés et mis de côté. Maintenant,
+git status
+ne devrait plus afficher aucun fichier (on dit que votre working directory est propre).
+
+Vous pouvez alors changer de branche, faire vos modifications, « committer », puis revenir sur la branche où vous étiez.
+
+git checkout master
+(modifier des fichiers)
+git commit -a
+git checkout mabranche
+
+Pour récupérer les changements que vous aviez mis de côté dans « mabranche », tapez :
+
+git stash apply
+
+Vos fichiers seront alors restaurés et se retrouveront donc l’état dans lequel ils étaient avant le
+git stash
+******************************

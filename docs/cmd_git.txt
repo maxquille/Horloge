@@ -37,3 +37,6 @@ git stash apply
 Vos fichiers seront alors restaurés et se retrouveront donc l’état dans lequel ils étaient avant le
 git stash
 ******************************
+Comparer 2 branches
+
+git diff branch_1..branch_2

@@ -21,12 +21,13 @@ import ConfigParser
 import sys
 
 #Reglage
-SCRIPT_VERSION="1.0.1"
+SCRIPT_VERSION="1.0.2"
 path_fileParam = "paramAppli.ini"
 path_fileConf = "confAppli.ini"
 logo_name = "logo.png"
 pictureDriver_name = "photo_pilote.png"
 archive_name = "patch_horloge.tar.gz"
+rep_work = os.path.abspath("/home/pi/Horloge/bin/")
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -79,16 +80,17 @@ class window(QWidget):
 		fconfig.set('Decompte','basculement2_min',self.decompteBasculement2_min)
 
 		try:
-			fconfig.write(open(os.path.join(str(sys.path[0]),str(path_fileParam)),'w'))
-			subprocess.check_output(["sync"])
+			fconfig.write(open(os.path.join(rep_work,str(path_fileParam)),'w'))
+			subprocess.check_output(["sync &"])
 		
 		except:
 			False
 
 	def readFileParam(self):
 		fconfig = ConfigParser.ConfigParser()
+
 		try:
-			fconfig.read(os.path.join(sys.path[0],path_fileParam))
+			fconfig.read(os.path.join(rep_work,path_fileParam))
 			self.TextPilote = fconfig.get('General','nom_pilote_copilote')
 		except:
 			self.TextPilote = "M. NomPilote / M. NomCopilote"	
@@ -118,7 +120,7 @@ class window(QWidget):
 	def readFileConf(self):
 		fconfig = ConfigParser.ConfigParser()
 		try:
-			fconfig.read(os.path.join(sys.path[0],path_fileConf))
+			fconfig.read(os.path.join(rep_work,path_fileConf))
 			self.version_Config = fconfig.get('General','version_config')
 			self.version_Logo = fconfig.get('General','version_logo')
 			temp = fconfig.get('General','couleur_fenetre_principal_haut')
@@ -218,7 +220,7 @@ class window(QWidget):
 		self.MainWindow_windowTitle="Horloge"
 		#self.MainWindow_lineSup=QPen(QColor(228,115,33),30)
 		#self.MainWindow_lineInf=QPen(QColor(83,84,89),30)
-		self.MainWindow_logoPath=os.path.join(sys.path[0],logo_name)
+		self.MainWindow_logoPath=os.path.join(rep_work,logo_name)
 		self.MainWindow_logoBackgroundColor="rgba(0,0,0,0%)"
 		self.MainWindow_logoWidth=300
 		self.MainWindow_logoHeight=100
@@ -231,7 +233,7 @@ class window(QWidget):
 		self.Pilote_textBorderRadius=""
 		self.Pilote_textY=10
 		# Photo pilote
-		self.PhotoPilote_Path = os.path.join(sys.path[0],pictureDriver_name)
+		self.PhotoPilote_Path = os.path.join(rep_work,pictureDriver_name)
 		self.PhotoPilotePath_BackgroundColor="rgba(255,0,0,0%)"
 		self.PhotoPilotePath_logoWidth=300
 		self.PhotoPilotePath_logoHeight=100
@@ -955,6 +957,8 @@ class window2(window):
 class windoCoherence(QWidget):
 	def __init__(self, parent=None):
 		QWidget.__init__(self)
+		self.MacAddr = ""
+		self.CpuInfo = ""
 		self.info1 = 0
 		self.info2 = 0
 		self.info3 = 0
@@ -967,6 +971,11 @@ class windoCoherence(QWidget):
 			self.tot += 175
 			self.tot = int(oct(self.tot))
 			self.tot = str(self.tot)
+			tmp = list(self.tot)
+			tmp = min(tmp)
+			for i in range (0,int(tmp)):
+				self.tot += '$'
+
 			if self.tot == self.info3:
 				return True
 			else:
@@ -976,7 +985,8 @@ class windoCoherence(QWidget):
 	
 	def infoRetrieve(self):
 		""" info1 """
-		self.info1 = os.popen("ifconfig eth0 | grep -o -E '([[:xdigit:]]{1,2}:){5}[[:xdigit:]]{1,2}'").read().strip().split(":")
+		self.MacAddr = os.popen("ifconfig eth0 | grep -o -E '([[:xdigit:]]{1,2}:){5}[[:xdigit:]]{1,2}'").read().strip().split(":")
+		self.info1 = self.MacAddr
 		
 		if len(self.info1) != 6:
 			self.info1 = -1
@@ -984,7 +994,8 @@ class windoCoherence(QWidget):
 			self.info1 = int(self.info1[3],16) + int(self.info1[4],16) + int(self.info1[5],16)
 		
 		""" info2 """
-		self.info2 = os.popen("cat /proc/cpuinfo | grep Serial | sed  s/.*\ //g").read().strip()
+		self.CpuInfo = os.popen("cat /proc/cpuinfo | grep Serial | sed  s/.*\ //g").read().strip()
+		self.info2 = self.CpuInfo
 		if len(self.info2)>=5:
 			self.info2 = self.info2[len(self.info2)-5:len(self.info2)]
 			self.info2 = int(self.info2,16)
@@ -1000,7 +1011,7 @@ class windoCoherence(QWidget):
 		self.setGeometry(qt.QDesktopWidget().screenGeometry(screen=1))
 		self.setWindowFlags(Qt.FramelessWindowHint)
 		self.mainLayoutWindowError = QtGui.QGridLayout(self)
-		self.labelUserError = QtGui.QLabel(unicode("ERR 175\n\n1/"+str(self.info1)+"\n2/"+str(self.info2)+"\n3/"+str(self.tot)+"\n\nh/"+str(self.info3)))
+		self.labelUserError = QtGui.QLabel(unicode("ERR 175\n\n1/"+str(self.MacAddr)+"\n2/"+str(self.CpuInfo)+"\n\nh/"+str(self.info3)))
 		font = QFont("Droid Sans")
 		font.setPointSize(30)
 		font.setBold(True)
@@ -1032,7 +1043,7 @@ class thradMaint(qtcore.QThread, QWidget):
 				
 				subprocess.check_output(["umount",res])
 				if self.rebootRequest:
-					self.rebootScript(res)
+					self.rebootScript()
 				
 			else:
 				time.sleep(3)
@@ -1047,26 +1058,6 @@ class thradMaint(qtcore.QThread, QWidget):
 				return line.split(" ")[1]
 
 		return None
-	
-	def initWindow(self):
-		self.popupUpdate.setGeometry(qt.QDesktopWidget().screenGeometry(screen=1).x()+100, qt.QDesktopWidget().screenGeometry(screen=1).y()+100,1000,900)
-		self.popupUpdate.setWindowTitle("Mise a jour")
-		self.mainlayoutPopupUpdate = QtGui.QGridLayout(self.popupUpdate)
-		
-		self.mainlayoutPopupUpdate.addWidget(QtGui.QLabel("********************\n* Cle USB detecte *\n********************"),0,0,1,2)
-
-		self.GroupBoxUpdateFw= QtGui.QGroupBox("Mise a jour script et conf")
-		layoutUpdateFw= QtGui.QVBoxLayout()
-		self.GroupBoxUpdateFw.setLayout(layoutUpdateFw)
-		self.mainlayoutPopupUpdate.addWidget(self.GroupBoxUpdateFw,1,0,30,2,Qt.AlignTop)
-
-		self.LabelTextUpdate = QLabel()
-		layoutUpdateFw.addWidget(self.LabelTextUpdate)
-	
-		self.LabelTextUpdate.setWordWrap(True)
-		
-	def updateText(self, text):
-		self.LabelTextUpdate.setText(self.LabelTextUpdate.text()+text)
 
 	def executePatch(self, path):
 		try:
@@ -1082,19 +1073,19 @@ class thradMaint(qtcore.QThread, QWidget):
 	def copyDriverPicture(self, path):
 		print "\nDebut fonction copyDriverPicture()"
 		try:
-			subprocess.check_output(["cp",os.path.join(path,pictureDriver_name),os.path.join(sys.path[0],pictureDriver_name)])
+			subprocess.check_output(["cp",os.path.join(path,pictureDriver_name),os.path.join(rep_work,pictureDriver_name)])
 			subprocess.check_output(["sync"])
 			self.rebootRequest = True
 			print "Fin fonction copyDriverPicture()"
 		except:
 			print "Erreur fonction copyDriverPicture()"
-					
-	def rebootScript(self, path):
+
+	def rebootScript(self):
 		print "\nDebut fonction rebootScript()"
 		os.system('echo "#! /bin/bash" > /tmp/rebootScript.sh')
 		os.system("""echo kill -9 "$PPID" >> /tmp/rebootScript.sh""")
 		os.system('echo "sleep 1" >> /tmp/rebootScript.sh')
-		os.system('echo "python /home/pi/Horloge/soft/horloge.pyw &" >> /tmp/rebootScript.sh')
+		os.system('echo "/bin/bash /startAppli.sh &" >> /tmp/rebootScript.sh')
 		
 		subprocess.check_output(["/bin/bash",os.path.join("/tmp","rebootScript.sh")])
 

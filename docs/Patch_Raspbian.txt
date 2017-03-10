@@ -18,8 +18,8 @@ Suppression ecran noir au bout de 10 min
 	  + suppression de la mise en veille par GUI menu / preference / manager power
 
 *************************
-Changement mot de pass 	root : root
-						pi	: root
+Changement mot de pass 	root 	: maxime!
+			pi	: maxime!
 	  
 ****************************************** 
 raspi-config : 
@@ -57,6 +57,37 @@ Ajout demarrage en auto de l'appli python horloge
 	
 	Ajout du fichier /home/pi/.config/autostart/horloge.desktop
 	
+*************************
+Ajout du module pyinstaller
+	sudo pip install pyinstaller
+
+*************************
+Ajout de htop
+	apt-get install htop
+
+*************************
+Mode kiosque
+	Modification du fichier /home/pi/.config/lxsession/LXDE-pi/autostart (autostart_old)
+
+*************************
+Ajout du paquet usbmount
+	apt-get install usbmount
 
 
+*************************
+Ajout du script /startAppli.sh
+
+
+
+
+
+
+
+
+
+
+
+
+
+pyinstaller -D -F horloge.pyw
 

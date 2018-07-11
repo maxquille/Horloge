@@ -21,7 +21,7 @@ import ConfigParser
 import sys
 
 #Reglage
-SCRIPT_VERSION="1.0.2"
+SCRIPT_VERSION="1.0.3"
 path_fileParam = "paramAppli.ini"
 path_fileConf = "confAppli.ini"
 logo_name = "logo.png"
@@ -564,8 +564,9 @@ class window1(window):
 		layoutInfoNom.addWidget(self.editorNom)
 		
 		self.checkBoxPhotoPilote = QtGui.QCheckBox('Afficher photo pilote (cocher avec la touche Espace)')
-		self.checkBoxPhotoPilote.setFocusPolicy(Qt.TabFocus)
-		layoutInfoNom.addWidget(self.checkBoxPhotoPilote)
+		self.checkBoxPhotoPilote.setCheckState(Qt.Unchecked)
+		#self.checkBoxPhotoPilote.setFocusPolicy(Qt.TabFocus)
+		#layoutInfoNom.addWidget(self.checkBoxPhotoPilote)
 
 		self.GroupBoxHin= QtGui.QGroupBox("Heure entree")
 		layoutHin = QtGui.QGridLayout()
@@ -1038,7 +1039,7 @@ class thradMaint(qtcore.QThread, QWidget):
 			if res != None:
 				print "\nCle USB detecte"
 				time.sleep(3)
-				self.copyDriverPicture(res)
+				#self.copyDriverPicture(res)
 				self.executePatch(res)
 				
 				subprocess.check_output(["umount",res])

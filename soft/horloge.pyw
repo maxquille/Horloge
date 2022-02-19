@@ -36,7 +36,7 @@ sys.setdefaultencoding('utf-8')
 def utils_date_is_valid(year, month, day, hour, minute, second):
     """ Test if date is valid and upper than 2000."""
     try:
-        if (year < 2000):
+        if (int(year) < 2000):
             return False
         datetime.datetime(year=int(year), month=int(month),   day=int(day), 
                           hour=int(hour), minute=int(minute), second=int(second))
@@ -132,7 +132,7 @@ class window(QWidget):
         except:
             self.decompteBasculement2_min = 0
 
-    def readPreviousChronoFromFileParam(self):
+    def restorePreviousChronoFromFileParam(self):
         fconfig = ConfigParser.ConfigParser()
 
         try:
@@ -419,7 +419,7 @@ class window1(window):
         self.readFileConf()
         self.templateWindow()
         self.overload_window()
-        self.readPreviousChronoFromFileParam()
+        self.restorePreviousChronoFromFileParam()
         self.setPopUp1()
         self.setPopUp2()
         self.setPopUp3()

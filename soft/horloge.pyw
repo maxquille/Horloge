@@ -20,6 +20,8 @@ from PyQt4.QtCore import QObject, pyqtSignal, SLOT, Qt, QCoreApplication
 import ConfigParser
 import sys
 
+PC_DEBUG = False
+
 #Reglage
 SCRIPT_VERSION="1.0.4"
 path_fileParam = "paramAppli.ini"
@@ -27,8 +29,9 @@ path_fileConf = "confAppli.ini"
 logo_name = "logo.png"
 pictureDriver_name = "photo_pilote.png"
 archive_name = "patch_horloge.tar.gz"
-#rep_work = os.path.abspath("/home/pi/Horloge/bin/") # TODO: uncomment this
-rep_work = os.path.abspath(".") # TODO: uncomment this
+rep_work = os.path.abspath("/home/pi/Horloge/bin/")
+if PC_DEBUG:
+    rep_work = os.path.abspath(".")
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -929,9 +932,12 @@ class window1(window):
                 + hour + ":" \
                 + minute + ":" \
                 + second + '"'
-            #osesystem(cmd)#TODO: Uncomment this line
-            time.sleep(3)
-            #subprocess.check_output(["sudo","hwclock","-w"])#TODO: Uncomment this line
+
+            if not PC_DEBUG:
+                osesystem(cmd)
+                time.sleep(3)
+                subprocess.check_output(["sudo","hwclock","-w"])
+
             self.popup2.hide()
             return
         
@@ -1024,7 +1030,9 @@ class windoCoherence(QWidget):
 
     def check(self):
         self.infoRetrieve()
-        return True #TODO: Remove this line
+        if PC_DEBUG:
+            return True
+        
         if self.info1 != -1 and self.info2 != -1 and self.info3 != -1:
             self.tot = self.info1 + self.info2
             self.tot += 175

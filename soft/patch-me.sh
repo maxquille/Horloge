@@ -21,10 +21,10 @@ cp ./horloge /home/pi/Horloge/bin
 chmod +x /home/pi/Horloge/bin/horloge
 
 # Copie du fichier de conf
-cp ./confAppli.ini /home/pi/Horloge/bin
+# cp ./confAppli.ini /home/pi/Horloge/bin
 
 # Mise Logo
-cp ./logo.png /home/pi/Horloge/bin
+# cp ./logo.png /home/pi/Horloge/bin
 
 # Mise à jour de l'OS
 

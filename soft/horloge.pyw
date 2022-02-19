@@ -27,7 +27,8 @@ path_fileConf = "confAppli.ini"
 logo_name = "logo.png"
 pictureDriver_name = "photo_pilote.png"
 archive_name = "patch_horloge.tar.gz"
-rep_work = os.path.abspath("/home/pi/Horloge/bin/")
+#rep_work = os.path.abspath("/home/pi/Horloge/bin/") # TODO: uncomment this
+rep_work = os.path.abspath(".") # TODO: uncomment this
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -83,15 +84,16 @@ class window(QWidget):
         #except IOError:
         fconfig.add_section('General')
         fconfig.add_section('Decompte')
+        fconfig.add_section('PreviousChrono')
         
         fconfig.set('General','nom_pilote_copilote',self.TextPilote)
         fconfig.set('General','duree_assistance_min',self.TempsAssi_min)
         fconfig.set('General','affichage_photo_pilote',self.displayPictureDriver)
-        fconfig.set('Decompte','isDisplayRAZChrono',self.DisplayRAZChrono)
-        fconfig.set('Decompte','heure_in',self.Hin)
-        fconfig.set('Decompte','heure_out',self.Hout)
         fconfig.set('Decompte','basculement1_min',self.decompteBasculement1_min)
         fconfig.set('Decompte','basculement2_min',self.decompteBasculement2_min)
+        fconfig.set('PreviousChrono','isDisplayRAZChrono',self.DisplayRAZChrono)
+        fconfig.set('PreviousChrono','heure_in',self.Hin)
+        fconfig.set('PreviousChrono','heure_out',self.Hout)
 
         try:
             fconfig.write(open(os.path.join(rep_work,str(path_fileParam)),'w'))
@@ -130,6 +132,36 @@ class window(QWidget):
         except:
             self.decompteBasculement2_min = 0
 
+    def readPreviousChronoFromFileParam(self):
+        fconfig = ConfigParser.ConfigParser()
+
+        try:
+            fconfig.read(os.path.join(rep_work,path_fileParam))
+            if (fconfig.getboolean('PreviousChrono','isdisplayrazchrono')):
+                self.DisplayRAZChrono = True
+                
+            else:
+                Hin = datetime.datetime.strptime(fconfig.get('PreviousChrono','heure_in'), "%Y-%m-%d %H:%M:%S")
+                Hout = datetime.datetime.strptime(fconfig.get('PreviousChrono','heure_out'), "%Y-%m-%d %H:%M:%S")
+                now = datetime.datetime.now()
+                
+                if (now - Hout) > datetime.timedelta(hours=9,minutes=59,seconds=59):
+                    # Previous is too hold, skip it.
+                    self.DisplayRAZChrono = True
+                    return
+                
+                self.Hin = Hin
+                self.Hout = Hout
+                self.labelHeureOut.setText(    " :   " + self.Hout.strftime("%H") + \
+                                            ":" + self.Hout.strftime("%M") + \
+                                            ":" + self.Hout.strftime("%S"))
+
+                self.labelHeureIn.setText(    " :   " + self.Hin.strftime("%H") + \
+                                            ":" + self.Hin.strftime("%M") + \
+                                            ":" +self.Hin.strftime("%S"))
+                self.DisplayRAZChrono = False
+        except:
+            self.DisplayRAZChrono = True
 
     def readFileConf(self):
         fconfig = ConfigParser.ConfigParser()
@@ -387,15 +419,13 @@ class window1(window):
         self.readFileConf()
         self.templateWindow()
         self.overload_window()
+        self.readPreviousChronoFromFileParam()
         self.setPopUp1()
         self.setPopUp2()
         self.setPopUp3()
         self.setPopUp4()
         self.setTimer()
         
-        self.DisplayRAZChrono = True
-        self.razChrono()
-            
         self.show()    
 
     def setTimer(self):
@@ -560,7 +590,7 @@ class window1(window):
         
     def razChrono(self):
         self.DisplayRAZChrono = True
-        
+    
     def setPopUp1(self):
         self.popup1 = QtGui.QWidget()
         self.popup1.setGeometry(qt.QDesktopWidget().screenGeometry(screen=1).x()+100, qt.QDesktopWidget().screenGeometry(screen=1).y()+100,100,100)
@@ -841,13 +871,12 @@ class window1(window):
                 self.labelInfoUser1.setText("Duree assistance trop grande : "+self.editorTempsAssi.text()+" minutes\r\nMinutes maximum : 599")
                 return
 
-            
             self.Hin = datetime.datetime(    int(time.strftime("%Y")),\
-                                            int(self.editorHin_month.text()),\
-                                            int(self.editorHin_day.text()),\
-                                            int(self.editorHin_h.text()),\
-                                            int(self.editorHin_m.text()),\
-                                            int(self.editorHin_s.text()))
+                                                int(self.editorHin_month.text()),\
+                                                int(self.editorHin_day.text()),\
+                                                int(self.editorHin_h.text()),\
+                                                int(self.editorHin_m.text()),\
+                                                int(self.editorHin_s.text()))
 
             self.TempsAssi_min = int(self.editorTempsAssi.text())
             self.Hout = self.Hin + datetime.timedelta(hours=0,minutes=self.TempsAssi_min,seconds=0)

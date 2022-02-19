@@ -1,15 +1,15 @@
 #! /bin/bash
 # 	File name 	: 	patch-me.sh
-#	Release		: 	PITSTOP_v1.0
+#	Release		: 	CHL_v1.5
 #	Date		: 	
 #	Author		: 	M. QUILLE
 #	Description	: 	-
 #	
 
 #	Versions des fichiers :
-#		* horloge.pyw 			: 1.0.3
-#		* confAppli.ini 		: PITSTOP_v0.1.0.0
-#		* logo.png				: PITSTOP_v0.1.0.0
+#		* horloge.pyw 			: 1.0.4
+#		* confAppli.ini 		: CHL_v0.1.0.0
+#		* logo.png				: CHL_v0.1.0.0
 #		* distribution			: raspberry_HorlogeImgBase_1.0.1.img
 
 cd /tmp/
@@ -36,7 +36,7 @@ mv /home/pi/Horloge/patch_horloge_current.tar.gz /home/pi/Horloge/backup/patch_h
 cp ./patch_horloge.tar.gz /home/pi/Horloge/patch_horloge_current.tar.gz
 
 # Mise à jour de la version GLOBAL projet
-echo "PITSTOP_v1.0" > /version_global_projet.txt
+echo "CHL_v1.5" > /version_global_projet.txt
 
 # Sync
 sleep 3

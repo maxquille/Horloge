@@ -20,7 +20,7 @@ Suppression ecran noir au bout de 10 min
 *************************
 Changement mot de pass 	root 	: maxime!
 			pi	: maxime!
-	  pour chl 	pi	: chl07340
+	  VNC pour chl 	pi	: chl07340
 ****************************************** 
 raspi-config : 
 	1) Ajout de VNC

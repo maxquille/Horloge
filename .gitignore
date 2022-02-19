@@ -5,3 +5,4 @@ img/*
 soft/paramAppli.ini
 docs/*
 soft/build/*
+.vscode/*

@@ -79,15 +79,6 @@ Ajout du script /startAppli.sh
 
 
 
-
-
-
-
-
-
-
-
-
-
+Conversion script depuis la raspberry :
 pyinstaller -D -F horloge.pyw
 

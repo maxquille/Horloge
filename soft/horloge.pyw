@@ -936,7 +936,7 @@ class window1(window):
                 + second + '"'
 
             if not PC_DEBUG:
-                osesystem(cmd)
+                os.system(cmd)
                 time.sleep(3)
                 subprocess.check_output(["sudo","hwclock","-w"])
 
@@ -1161,7 +1161,7 @@ class thradMaint(qtcore.QThread, QWidget):
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
-
+    QtGui.QApplication.setStyle(QtGui.QStyleFactory.create('Cleanlooks'))
     subprocess.check_output(["setxkbmap","fr"])
     
     checkCo = windoCoherence()

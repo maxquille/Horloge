@@ -99,11 +99,13 @@ class window(QWidget):
         fconfig.set('PreviousChrono','heure_out',self.Hout)
 
         try:
-            fconfig.write(open(os.path.join(rep_work,str(path_fileParam)),'w'))
-            subprocess.check_output(["sync &"])
-        
+            filename = os.path.join(rep_work,str(path_fileParam))
+            with open(filename, 'w') as configfile:
+                fconfig.write(configfile)
+                configfile.flush()
+                os.fsync(configfile.fileno())
         except:
-            False
+            pass
 
     def readFileParam(self):
         fconfig = ConfigParser.ConfigParser()

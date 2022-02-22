@@ -744,7 +744,7 @@ class window1(window):
 
     def setPopUp3(self):
         self.popup3 = QtGui.QWidget()
-        self.popup3.setGeometry(qt.QDesktopWidget().screenGeometry(screen=1).x()+100, qt.QDesktopWidget().screenGeometry(screen=1).y()+100,500,500)
+        self.popup3.setGeometry(qt.QDesktopWidget().screenGeometry(screen=1).x()+100, qt.QDesktopWidget().screenGeometry(screen=1).y()+100,500,250)
         self.popup3.setWindowTitle("Versions")
         self.mainLayoutPopup3 = QtGui.QGridLayout(self.popup3)
 
